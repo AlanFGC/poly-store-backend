@@ -1,0 +1,11 @@
+#spring:
+#  datasource:
+#    username: root
+#    password: password123@HELLO
+#    url: jdbc:mysql://localhost:3306/polystore
+#jpa:
+#  show-sql: true
+#  hibernate:
+#      ddl-auto: create-drop
+#  properties.hibernate.dialect: org.hibernate.dialect.MySQL5Dialect
+# security password: 82db4471-a248-443d-83c7-5c41c9daa3bc
