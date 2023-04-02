@@ -1,8 +1,8 @@
 package com.polystore.polystorebackend.api.model;
 
 public enum Role {
-    anonymous,
-    user,
-    creator,
-    admin
+    ANY,
+    USER,
+    CREATOR,
+    ADMIN
 }

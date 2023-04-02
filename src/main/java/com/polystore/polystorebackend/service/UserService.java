@@ -3,6 +3,7 @@ package com.polystore.polystorebackend.service;
 import com.polystore.polystorebackend.api.model.User;
 import com.polystore.polystorebackend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -41,6 +42,10 @@ public class UserService {
         existingUser.setPassword(user.getPassword());
         existingUser.setRole(user.getRole());
         return userRepository.save(existingUser);
+    }
+
+    public List<User> findAll(){
+        return userRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
     }
 
 }
