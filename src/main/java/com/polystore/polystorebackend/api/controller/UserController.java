@@ -24,12 +24,12 @@ public class UserController {
     }
 
 
-    @GetMapping("/user/{id}")
+    @GetMapping("/user/id/{id}")
     public User findUserById(@PathVariable int id){
         return userService.getUserById(id);
     }
 
-    @GetMapping("/user/{name}")
+    @GetMapping("/user/name/{name}")
     public User findUserByName(@PathVariable String name){
         return userService.getUserByName(name);
     }
