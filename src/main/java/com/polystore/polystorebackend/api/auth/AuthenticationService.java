@@ -15,6 +15,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {
@@ -25,6 +27,7 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
 
     private final TokenRepository tokenRepository;
+
     public AuthenticationResponse register(RegisterRequest request) {
         var user = User.builder()
                 .username(request.getUsername())
@@ -35,8 +38,6 @@ public class AuthenticationService {
                 .build();
         repository.save(user);
         var jwtToken = jwtService.generateToken(user);
-        // remove all logged in users
-        //revokeAllUserTokens(user);
         this.saveUserToken(user, jwtToken);
         return AuthenticationResponse.builder()
                 .token(jwtToken)
@@ -44,8 +45,7 @@ public class AuthenticationService {
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
-
-        try{
+        try {
             Authentication auth = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             request.getUsername(),
@@ -54,14 +54,15 @@ public class AuthenticationService {
             );
             User user = repository.findByUsername(request.getUsername()).orElse(new User());
             System.out.println("USERNAME: " + user.getUsername() + user.getPassword() + user.getEmail());
+            revokeAllUserTokens(user);
             String jwtToken = jwtService.generateToken(user);
-
+            saveUserToken(user, jwtToken);
             return new AuthenticationResponse(jwtToken, "");
-        } catch (Exception e){
+        } catch (Exception e) {
             System.out.println("ERROR:" + e);
             // never let them know your next move
             // TODO figure out a better message
-            return new AuthenticationResponse("", "Admin status gained");
+            return new AuthenticationResponse("INVALID", "BAD CREDENTIALS");
         }
     }
 
@@ -77,9 +78,9 @@ public class AuthenticationService {
     }
 
     private void revokeAllUserTokens(User user) {
-        var validUserTokens = tokenRepository.findAllValidTokenByUser(user.getId());
-        if (validUserTokens.isEmpty())
-            return;
+        System.out.println("USER ID:" +  user.getId());
+        List<Token> validUserTokens = tokenRepository.findAllValidTokenByUser(user.getId());
+        if (validUserTokens.isEmpty()) return;
         validUserTokens.forEach(token -> {
             token.setExpired(true);
             token.setRevoked(true);
