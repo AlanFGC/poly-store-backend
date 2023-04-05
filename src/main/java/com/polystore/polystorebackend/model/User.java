@@ -1,4 +1,4 @@
-package com.polystore.polystorebackend.api.model;
+package com.polystore.polystorebackend.model;
 
 
 import jakarta.persistence.*;
@@ -14,7 +14,8 @@ import java.util.List;
 
 @Entity
 @Builder
-@Table(name = "users")
+@Table(name = "user")
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class User implements UserDetails {
@@ -23,7 +24,7 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
-    @Column(unique = true)
+    @Column(name="username", unique = true)
     private String username;
     private String email;
     private String password;

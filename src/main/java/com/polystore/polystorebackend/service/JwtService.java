@@ -1,4 +1,4 @@
-package com.polystore.polystorebackend.security.config;
+package com.polystore.polystorebackend.service;
 
 
 import io.jsonwebtoken.Claims;

@@ -1,4 +1,4 @@
-package com.polystore.polystorebackend.api.model;
+package com.polystore.polystorebackend.model;
 
 public enum Role {
     ANY,

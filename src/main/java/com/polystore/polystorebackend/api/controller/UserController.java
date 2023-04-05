@@ -1,6 +1,6 @@
 package com.polystore.polystorebackend.api.controller;
 
-import com.polystore.polystorebackend.api.model.User;
+import com.polystore.polystorebackend.model.User;
 import com.polystore.polystorebackend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/users")
+@RequestMapping("/api/users")
 public class UserController {
     @Autowired
     private UserService userService;

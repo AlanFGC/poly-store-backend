@@ -1,5 +1,6 @@
-package com.polystore.polystorebackend.security.config;
+package com.polystore.polystorebackend.config;
 
+import com.polystore.polystorebackend.repository.TokenRepository;
 import com.polystore.polystorebackend.repository.UserRepository;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +22,8 @@ public class ApplicationConfig {
     private final UserRepository userRepository;
     @Bean
     public UserDetailsService userDetailsService() {
-        return username -> userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        return username -> userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
     @Bean
