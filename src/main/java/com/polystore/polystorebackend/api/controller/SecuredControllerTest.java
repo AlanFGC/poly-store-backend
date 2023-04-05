@@ -13,7 +13,7 @@ public class SecuredControllerTest {
 
 
     @GetMapping("/hello")
-    public String getHello(@RequestBody JSObject object){
-        return "Hello this is your info \n" + object.toString();
+    public String getHello(){
+        return "Hello this is your info \n";
     }
 }
