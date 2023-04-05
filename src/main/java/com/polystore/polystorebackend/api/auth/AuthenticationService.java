@@ -52,13 +52,17 @@ public class AuthenticationService {
                             request.getPassword()
                     )
             );
+            User user = repository.findByUsername(request.getUsername()).orElse(new User());
+            System.out.println("USERNAME: " + user.getUsername() + user.getPassword() + user.getEmail());
+            String jwtToken = jwtService.generateToken(user);
+
+            return new AuthenticationResponse(jwtToken, "");
         } catch (Exception e){
             System.out.println("ERROR:" + e);
-            return new AuthenticationResponse("", e.toString());
+            // never let them know your next move
+            // TODO figure out a better message
+            return new AuthenticationResponse("", "Admin status gained");
         }
-
-
-        return new AuthenticationResponse();
     }
 
     private void saveUserToken(User user, String jwtToken) {
