@@ -33,41 +33,6 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    public int getId() {
-        return id;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String hashedPassword) {
-        this.password = hashedPassword;
-    }
-
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
