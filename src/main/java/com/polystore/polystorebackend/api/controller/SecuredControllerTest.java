@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/secured")
 public class SecuredControllerTest {
-
-
     @GetMapping("/hello")
     public String getHello(){
         return "Hello this is your info \n";
