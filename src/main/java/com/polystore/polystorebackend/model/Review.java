@@ -9,23 +9,9 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "review")
 @Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class Review {
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private int previewId;
-
-    @ManyToOne
-    @JoinColumn(name = "reviewer",
-                referencedColumnName = "username")
-    private User reviewer;
-
-    @Id
-    @ManyToOne
-    @JoinColumn(name = "product")
-    private Product product;
+    @EmbeddedId
+    private ReviewId reviewId;
 
     @Column(name = "review")
     private String review;

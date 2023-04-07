@@ -31,5 +31,4 @@ public class Product {
 
     @Column(name = "thumbnail")
     private String thumbnailURL;
-
 }
