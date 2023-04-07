@@ -17,14 +17,14 @@ public class Scene {
     @OneToOne
     @PrimaryKeyJoinColumn(name="product_id")
     private Product product;
-
     @Column(name="color", length = 7)
     private String color;
-
     @Column(name="camera_pos", length = 3)
     private int[] cameraPosition;
     @Column(name="fov")
     private short fov;
     @Column(name="auto_rotate")
     private Boolean autoRotate;
+    @Column(name = "hdri_url")
+    private String hdriUrl;
 }
