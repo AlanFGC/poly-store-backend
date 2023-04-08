@@ -22,7 +22,7 @@ public class ProductController {
 
     @GetMapping("/list/{n}")
     public List<Product> getNProducts(@PathVariable int n){
-        return List.of((Product) productService.getNRandomProducts(n));
+        return productService.getNRandomProducts(n);
     }
 
     @PostMapping("/create")
