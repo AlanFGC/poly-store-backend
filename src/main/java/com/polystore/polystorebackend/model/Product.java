@@ -13,7 +13,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Product {
-
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private int productId;

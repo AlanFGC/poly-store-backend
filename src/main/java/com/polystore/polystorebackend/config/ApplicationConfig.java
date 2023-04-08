@@ -1,8 +1,6 @@
 package com.polystore.polystorebackend.config;
 
-import com.polystore.polystorebackend.repository.TokenRepository;
 import com.polystore.polystorebackend.repository.UserRepository;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

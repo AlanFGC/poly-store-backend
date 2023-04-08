@@ -17,8 +17,9 @@ public class ReviewId implements Serializable {
     @JoinColumn(name="product")
     private Product productId;
     @ManyToOne
-    @JoinColumn(name="user")
-    private User userId;
+    @JoinColumn(name="user",
+    referencedColumnName = "username")
+    private User username;
     public ReviewId() {
 
     }
