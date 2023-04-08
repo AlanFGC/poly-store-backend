@@ -28,7 +28,7 @@ public class ProductService {
     @Autowired
     private SceneRepository sceneRepository;
 
-    public Collection<Product> getNRandomProducts(int k){
+    public List<Product> getNRandomProducts(int k){
         List<Product> productList =  productRepository.findAll();
         if (k >= productList.size()) k = productList.size() -1;
         Collections.shuffle(productList);
