@@ -19,6 +19,11 @@ import java.util.Optional;
 
 @Service
 public class ProductService {
+
+
+    @Autowired
+    private UserService userService;
+
     @Autowired
     private ProductRepository productRepository;
 
@@ -32,6 +37,7 @@ public class ProductService {
         List<Product> productList =  productRepository.findAll();
         if (k >= productList.size()) k = productList.size() -1;
         Collections.shuffle(productList);
+        if (k < 0) k = 0;
         productList.subList(0, k);
         return productList;
     }
@@ -44,6 +50,9 @@ public class ProductService {
         return product;
     }
 
+
+
+
     public Product deleteProduct(int id) {
         Product product = productRepository.findById(id).orElseThrow();
         productRepository.deleteById(product.getProductId());
@@ -51,6 +60,8 @@ public class ProductService {
     }
 
     public Product createProduct(Product product){
+        User user = userService.getUserById(product.getOwner().getId());
+        product.setOwner(user);
         return productRepository.save(product);
     }
 

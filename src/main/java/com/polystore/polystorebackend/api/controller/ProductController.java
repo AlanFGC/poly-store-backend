@@ -5,12 +5,10 @@ import com.polystore.polystorebackend.model.Product;
 import com.polystore.polystorebackend.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/products")
+@RequestMapping("/api/products")
 public class ProductController {
 
     @Autowired
@@ -26,9 +24,11 @@ public class ProductController {
     }
 
     @PostMapping("/create")
-    public String  createProduct(@RequestBody Product product){
-        return "Success";
+    public Product  createProduct(@RequestBody Product product){
+        return productService.createProduct(product);
     }
+
+
     @DeleteMapping("/{id}")
     public String deleteProduct(@PathVariable int id){
         return "deleting product" + id;
