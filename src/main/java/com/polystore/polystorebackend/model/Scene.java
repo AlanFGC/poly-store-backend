@@ -4,10 +4,12 @@ package com.polystore.polystorebackend.model;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name="scene")
+@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
