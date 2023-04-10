@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 @Table(name="scene")
 @Data
 @Builder
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class Scene {
