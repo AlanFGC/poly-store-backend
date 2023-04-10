@@ -48,4 +48,7 @@ public class UserService {
         return userRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
     }
 
+    public User getReferenceById(int id){
+        return userRepository.getReferenceById(id);
+    }
 }

@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name="scene")
+@Data
 @Builder
 @Data
 @NoArgsConstructor
