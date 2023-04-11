@@ -21,7 +21,6 @@ import java.util.Optional;
 @Service
 public class ProductService {
 
-
     @Autowired
     private UserService userService;
 
@@ -51,16 +50,16 @@ public class ProductService {
         return productList;
     }
 
+
     public Collection<Product> getAll() {
         return productRepository.findAll();
     }
+
 
     public Product findById(int id) {
         Product product = productRepository.findById(id).orElse(new Product());
         return product;
     }
-
-
 
 
     public Product deleteProduct(int id) {
@@ -122,11 +121,10 @@ public class ProductService {
 
 
     // LIKES
-    public int getLikes(int id) {
-        Product product = productRepository.findById(id).orElseThrow();
+    public int getLikes(int productId) {
+        Product product = productRepository.findById(productId).orElseThrow();
         return product.getLikes();
     }
-
 
     public int giveLike(String username, int productId) {
         User user = userService.getUserByName(username);
@@ -157,13 +155,11 @@ public class ProductService {
         return product.getLikes();
     }
 
-
     private Likes createLike(Product product, User user, LikesId likeId) {
         product.setLikes(product.getLikes() + 1);
         productRepository.save(product);
         Likes likes = Likes.builder().id(likeId).build();
         return likesRepository.save(likes);
     }
-
 
 }
