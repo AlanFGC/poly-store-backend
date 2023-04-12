@@ -1,45 +1,40 @@
 package com.polystore.polystorebackend.api.controller;
-
-
+import com.polystore.polystorebackend.api.responses.ProductResponse;
 import com.polystore.polystorebackend.model.Product;
 import com.polystore.polystorebackend.service.ProductService;
-import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
 import java.security.Principal;
 import java.util.List;
-
 @RestController
 @RequestMapping("/api/products")
 public class ProductController {
-
     @Autowired
     private ProductService productService;
     @GetMapping("/{id}")
-    public String getProduct(@PathVariable int id){
-        return "getting product" + id;
+    public ProductResponse getProduct(@PathVariable int id){
+        return ProductResponse.productToProductResponse(productService.findById(id));
     }
 
     @GetMapping("/list/{n}")
-    public List<Product> getNProducts(@PathVariable int n){
-        return productService.getNRandomProducts(n);
+    public List<ProductResponse> getNProducts(@PathVariable int n){
+        List<Product> productList = productService.getPageOfSize(n);
+        return ProductResponse.listToProductResponse(productList);
     }
 
     @PostMapping("/create")
-    public Product  createProduct(@RequestBody Product product){
-        return productService.createProduct(product);
+    public ProductResponse  createProduct(@RequestBody Product product){
+        return ProductResponse.productToProductResponse(productService.createProduct(product));
     }
 
     @DeleteMapping("/{id}")
-    public Product deleteProduct(@PathVariable int id){
-        return productService.deleteProduct(id);
+    public ProductResponse deleteProduct(@PathVariable int id){
+        return ProductResponse.productToProductResponse(productService.deleteProduct(id));
     }
 
     @PutMapping("/like/{id}")
-    public String increaseLike(Principal principal, @PathVariable int id){
-
-        return principal.getName();
+    public Boolean increaseLike(Principal principal, @PathVariable int id){
+        productService.giveLike(principal.getName(), id);
+        return true;
     }
-
 }

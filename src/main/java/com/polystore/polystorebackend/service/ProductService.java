@@ -8,6 +8,7 @@ import com.polystore.polystorebackend.repository.ReviewRepository;
 import com.polystore.polystorebackend.repository.SceneRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -41,18 +42,11 @@ public class ProductService {
 
 
     // PRODUCT
-    public List<Product> getNRandomProducts(int k) {
-        // todo don't find all just a query that has a limit
-        List<Product> productList = productRepository.findAll();
-        if (k >= productList.size()) k = productList.size() - 1;
-        Collections.shuffle(productList);
-        if (k < 0) k = 0;
-        productList = productList.subList(0, k);
-        for (Product current:productList){
-            String owner = current.getOwner().getUsername();
-            current.setOwner(User.builder().username(owner).build());
+    public List<Product> getPageOfSize(int k) {
+        if (k < 0 || k > 50){
+            throw new IllegalArgumentException();
         }
-        return productList;
+        return productRepository.findAll(PageRequest.of(1, k).getSort());
     }
 
 
