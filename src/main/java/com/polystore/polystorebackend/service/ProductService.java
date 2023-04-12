@@ -42,11 +42,16 @@ public class ProductService {
 
     // PRODUCT
     public List<Product> getNRandomProducts(int k) {
+        // todo don't find all just a query that has a limit
         List<Product> productList = productRepository.findAll();
         if (k >= productList.size()) k = productList.size() - 1;
         Collections.shuffle(productList);
         if (k < 0) k = 0;
-        productList.subList(0, k);
+        productList = productList.subList(0, k);
+        for (Product current:productList){
+            String owner = current.getOwner().getUsername();
+            current.setOwner(User.builder().username(owner).build());
+        }
         return productList;
     }
 
@@ -58,6 +63,8 @@ public class ProductService {
 
     public Product findById(int id) {
         Product product = productRepository.findById(id).orElse(new Product());
+        String owner = product.getOwner().getUsername();
+        product.setOwner(User.builder().username(owner).build());
         return product;
     }
 
