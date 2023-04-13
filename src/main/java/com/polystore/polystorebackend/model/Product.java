@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 @Entity
 @Table(name="product")
 @Data
@@ -31,4 +33,6 @@ public class Product {
 
     @Column(name = "thumbnail")
     private String thumbnailURL;
+
+    private Date date;
 }

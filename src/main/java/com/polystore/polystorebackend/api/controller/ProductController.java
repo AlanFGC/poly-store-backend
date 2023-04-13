@@ -3,6 +3,8 @@ import com.polystore.polystorebackend.api.responses.ProductResponse;
 import com.polystore.polystorebackend.model.Product;
 import com.polystore.polystorebackend.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
 import java.util.List;
@@ -33,8 +35,12 @@ public class ProductController {
     }
 
     @PutMapping("/like/{id}")
-    public Boolean increaseLike(Principal principal, @PathVariable int id){
-        productService.giveLike(principal.getName(), id);
-        return true;
+    public ResponseEntity increaseLike(Principal principal, @PathVariable int id){
+        try {
+            productService.giveLike(principal.getName(), id);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Couldn't complete transaction", HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>("Liked changed", HttpStatus.OK);
     }
 }

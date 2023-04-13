@@ -11,6 +11,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -24,11 +25,11 @@ public class ProductResponse {
     private String owner;
     private String resourceURL;
     private String thumbnailURL;
+    private Date date;
     public static ProductResponse productToProductResponse(Product product) {
         if(product == null){
             return new ProductResponse();
         }
-
         ProductResponse productResponse = new ProductResponse();
         productResponse.productId = product.getProductId();
         productResponse.likes = product.getLikes();
@@ -37,6 +38,7 @@ public class ProductResponse {
         productResponse.owner = product.getOwner().getUsername();
         productResponse.resourceURL = product.getResourceURL();
         productResponse.thumbnailURL = product.getThumbnailURL();
+        productResponse.date = product.getDate();
         return productResponse;
     }
 

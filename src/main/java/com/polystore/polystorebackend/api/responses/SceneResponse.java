@@ -2,6 +2,7 @@ package com.polystore.polystorebackend.api.responses;
 
 
 import com.polystore.polystorebackend.model.Product;
+import com.polystore.polystorebackend.model.Scene;
 import jakarta.persistence.Column;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
@@ -10,6 +11,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.transaction.jta.UserTransactionAdapter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Data
@@ -23,6 +27,29 @@ public class SceneResponse {
     private short fov;
     private Boolean autoRotate;
     private String hdriUrl;
+
+    public static SceneResponse sceneToSceneResponse(Scene scene){
+        SceneResponse sceneResponse = new SceneResponse();
+        sceneResponse.autoRotate = scene.getAutoRotate();
+        sceneResponse.fov = scene.getFov();
+        sceneResponse.cameraPosition = scene.getCameraPosition();
+        sceneResponse.hdriUrl = scene.getHdriUrl();
+        sceneResponse.sceneId = scene.getSceneId();
+        sceneResponse.color = scene.getColor();
+        sceneResponse.productId = scene.getProduct().getProductId();
+        return sceneResponse;
+    }
+
+    public static List<SceneResponse> sceneListToSceneResponse(List<Scene> sceneList){
+        List<SceneResponse> sceneResponses = new ArrayList<>();
+
+        for (Scene scene:
+             sceneList) {
+            sceneResponses.add(sceneToSceneResponse(scene));
+        }
+        return sceneResponses;
+    }
+
 }
 
 
