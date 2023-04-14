@@ -1,4 +1,5 @@
 package com.polystore.polystorebackend.service;
+import com.polystore.polystorebackend.api.requests.SceneRequest;
 import com.polystore.polystorebackend.model.*;
 import com.polystore.polystorebackend.repository.LikesRepository;
 import com.polystore.polystorebackend.repository.ProductRepository;
@@ -82,20 +83,16 @@ public class ProductService {
 
     // SCENE
 
-    public Scene ceateScene(Scene scene) {
+    public Scene createScene(Scene scene) {
         Product product = productRepository.getReferenceById(scene.getProduct().getProductId());
-        scene.setProduct(product);
+        if (product == null) throw new NullPointerException("No product with id given has been found");
         return sceneRepository.save(scene);
     }
 
-    public Scene updateScene(Scene sceneRequest) {
-        Scene existingScene = sceneRepository.findById(sceneRequest.getSceneId()).orElseThrow();
-        existingScene.setFov(sceneRequest.getFov());
-        existingScene.setAutoRotate(sceneRequest.getAutoRotate());
-        existingScene.setColor(sceneRequest.getColor());
-        existingScene.setHdriUrl(existingScene.getHdriUrl());
-        existingScene.setCameraPosition(existingScene.getCameraPosition());
-        return sceneRepository.save(existingScene);
+    public Scene updateScene(Scene scene) {
+        if (sceneRepository.existsById(scene.getSceneId())) throw new InvalidParameterException("Scene does not exist");
+        return null;
+
     }
 
 
@@ -104,9 +101,8 @@ public class ProductService {
     }
 
     public Scene getSceneByProductId(int productId) {
-        return sceneRepository.getSceneByProductId(productId).orElse(new Scene());
+        return sceneRepository.getSceneByProductId(productId).orElseThrow();
     }
-
 
     public Scene getSceneById(int sceneId) {
         return sceneRepository.findById(sceneId).orElseThrow();
@@ -140,7 +136,6 @@ public class ProductService {
     }
 
 
-    // LIKES
     // LIKES
     public int getLikes(int productId) {
         Product product = productRepository.findById(productId).orElseThrow();

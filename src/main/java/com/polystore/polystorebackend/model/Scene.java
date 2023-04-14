@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Type;
 
 @Entity
 @Table(name="scene")
@@ -15,14 +16,16 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Scene {
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private int sceneId;
     @OneToOne
-    @PrimaryKeyJoinColumn(name="product_id")
+    @JoinColumn(name = "productId", unique = true)
     private Product product;
     @Column(name="color", length = 7)
     private String color;
-    @Column(name="camera_pos", length = 3)
-    private int[] cameraPosition;
+    private int cameraX;
+    private int cameraY;
+    private int cameraZ;
     @Column(name="fov")
     private short fov;
     @Column(name="auto_rotate")

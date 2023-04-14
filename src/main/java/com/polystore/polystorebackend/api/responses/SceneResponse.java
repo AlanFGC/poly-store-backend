@@ -32,7 +32,10 @@ public class SceneResponse {
         SceneResponse sceneResponse = new SceneResponse();
         sceneResponse.autoRotate = scene.getAutoRotate();
         sceneResponse.fov = scene.getFov();
-        sceneResponse.cameraPosition = scene.getCameraPosition();
+        sceneResponse.cameraPosition = new int[3];
+        sceneResponse.cameraPosition[0] = scene.getCameraX();
+        sceneResponse.cameraPosition[1] = scene.getCameraY();
+        sceneResponse.cameraPosition[2] = scene.getCameraZ();
         sceneResponse.hdriUrl = scene.getHdriUrl();
         sceneResponse.sceneId = scene.getSceneId();
         sceneResponse.color = scene.getColor();
@@ -42,7 +45,6 @@ public class SceneResponse {
 
     public static List<SceneResponse> sceneListToSceneResponse(List<Scene> sceneList){
         List<SceneResponse> sceneResponses = new ArrayList<>();
-
         for (Scene scene:
              sceneList) {
             sceneResponses.add(sceneToSceneResponse(scene));
