@@ -1,6 +1,7 @@
 package com.polystore.polystorebackend.service;
 
 
+import ch.qos.logback.core.joran.sanity.Pair;
 import com.polystore.polystorebackend.api.requests.ProductRequest;
 import com.polystore.polystorebackend.model.*;
 import com.polystore.polystorebackend.repository.LikesRepository;
@@ -65,11 +66,10 @@ public class ProductService {
         return product;
     }
 
-    public Product createProduct(ProductRequest productRequest) {
-        Product product = ProductRequest.convertToProduct(productRequest);
-        System.out.println(productRequest.getUsername());
-        User user = userService.getUserByName(productRequest.getUsername());
+    public Product createProduct(Product product) {
 
+
+        User user = userService.getUserByName(product.getOwner().getUsername());
         product.setOwner(user);
 
         return productRepository.save(product);
@@ -160,11 +160,17 @@ public class ProductService {
         return product.getLikes();
     }
 
-    private Likes createLike(Product product, User user, LikesId likeId) {
-        product.setLikes(product.getLikes() + 1);
+    private Pair<Boolean, Integer> createLike(Product product, User user, LikesId likeId) {
+
+        Integer numbLikes = product.getLikes() + 1;
+
+        product.setLikes(numbLikes);
         productRepository.save(product);
-        Likes likes = Likes.builder().id(likeId).build();
-        return likesRepository.save(likes);
+        Likes likes = likesRepository.save(Likes.builder().id(likeId).liked(true).build());
+
+        Pair<Boolean, Integer> pair = new Pair
+
+        return (likes.isLiked(), numbLikes);
     }
 
 }

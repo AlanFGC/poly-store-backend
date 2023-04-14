@@ -1,4 +1,5 @@
 package com.polystore.polystorebackend.api.controller;
+import com.polystore.polystorebackend.api.requests.LikeResponse;
 import com.polystore.polystorebackend.api.requests.ProductRequest;
 import com.polystore.polystorebackend.api.responses.ProductResponse;
 import com.polystore.polystorebackend.model.Product;
@@ -36,9 +37,12 @@ public class ProductController {
 
     @PostMapping("/create")
     public ProductResponse  createProduct(@RequestBody ProductRequest productRequest){
+
+        Product product = ProductRequest.convertToProduct(productRequest);
+
         try {
 
-            return ProductResponse.productToProductResponse(productService.createProduct(productRequest));
+            return ProductResponse.productToProductResponse(productService.createProduct(product));
 
         } catch (Exception e) {
             return ProductResponse.productToProductResponse(new Product());
@@ -51,13 +55,15 @@ public class ProductController {
     }
 
     @PutMapping("/like/{id}")
-    public ResponseEntity increaseLike(Principal principal, @PathVariable int id){
+    public ResponseEntity<LikeResponse> increaseLike(Principal principal, @PathVariable int id){
         try {
-            productService.giveLike(principal.getName(), id);
-        } catch (Exception e) {
-            return new ResponseEntity<>("Couldn't complete transaction", HttpStatus.BAD_REQUEST);
+            int numbLikes = productService.giveLike(principal.getName(), id);
+            LikeResponse likeResponse = LikeResponse.builder().numberOfLikes(numbLikes).productid(id).state(state);
+            return new ResponseEntity(likeResponse , HttpStatus.OK);
+        }catch (Exception e) {
+            return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>("Liked changed", HttpStatus.OK);
+
     }
 
 }

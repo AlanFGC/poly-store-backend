@@ -24,6 +24,7 @@ public class ProductRequest {
         user.setUsername(productRequest.getUsername());
         return Product.builder()
                 .likes(0)
+                .price(productRequest.price)
                 .owner(user)
                 .views(0)
                 .resourceURL(productRequest.resource)
@@ -31,7 +32,5 @@ public class ProductRequest {
                 .date(productRequest.date)
                 .build();
     }
-
-
 
 }
