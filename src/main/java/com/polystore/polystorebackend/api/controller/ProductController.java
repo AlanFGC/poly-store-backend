@@ -5,6 +5,7 @@ import com.polystore.polystorebackend.api.responses.ProductResponse;
 import com.polystore.polystorebackend.model.Product;
 import com.polystore.polystorebackend.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.util.Pair;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +21,8 @@ public class ProductController {
     private ProductService productService;
     @GetMapping("/{id}")
     public ProductResponse getProduct(@PathVariable int id){
-        return ProductResponse.productToProductResponse(productService.findProductById(id));
+        ProductResponse response = ProductResponse.productToProductResponse(productService.findProductById(id));
+        return response;
     }
 
     @GetMapping("/list/{n}")
@@ -57,13 +59,11 @@ public class ProductController {
     @PutMapping("/like/{id}")
     public ResponseEntity<LikeResponse> increaseLike(Principal principal, @PathVariable int id){
         try {
-            int numbLikes = productService.giveLike(principal.getName(), id);
-            LikeResponse likeResponse = LikeResponse.builder().numberOfLikes(numbLikes).productid(id).state(state);
+            Pair<Integer, Boolean> data = productService.giveLike(principal.getName(), id);
+            LikeResponse likeResponse = LikeResponse.builder().numberOfLikes(data.getFirst()).productid(id).state(data.getSecond()).build();
             return new ResponseEntity(likeResponse , HttpStatus.OK);
         }catch (Exception e) {
             return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
         }
-
     }
-
 }

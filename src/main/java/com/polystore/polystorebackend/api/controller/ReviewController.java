@@ -33,7 +33,6 @@ public class ReviewController {
         }
     }
 
-
     @GetMapping("/{productId}")
     public ResponseEntity<List<ReviewResponse>> getReviewsFromProduct(@PathVariable int productId){
         try {

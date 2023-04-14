@@ -1,8 +1,4 @@
 package com.polystore.polystorebackend.service;
-
-
-import ch.qos.logback.core.joran.sanity.Pair;
-import com.polystore.polystorebackend.api.requests.ProductRequest;
 import com.polystore.polystorebackend.model.*;
 import com.polystore.polystorebackend.repository.LikesRepository;
 import com.polystore.polystorebackend.repository.ProductRepository;
@@ -10,8 +6,8 @@ import com.polystore.polystorebackend.repository.ReviewRepository;
 import com.polystore.polystorebackend.repository.SceneRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
-
 import java.util.Collection;
 import java.util.List;
 
@@ -131,7 +127,11 @@ public class ProductService {
         return product.getLikes();
     }
 
-    public int giveLike(String username, int productId) {
+
+
+    public Pair<Integer, Boolean> giveLike(String username, int productId) {
+        Pair<Integer, Boolean> integerBooleanPair;
+
         User user = userService.getUserByName(username);
         Product product = productRepository.findById(productId).orElseThrow();
         LikesId likeId = new LikesId();
@@ -139,14 +139,18 @@ public class ProductService {
         likeId.setUserId(user);
         Likes like = likesRepository.findById(likeId).orElse(null);
 
-        // create
+        // create like from start
         if (like == null) {
-            like = createLike(product, user, likeId);
-            return product.getLikes();
+            like = createLike(product, likeId);
+            Integer numbLikes = product.getLikes() + 1;
+            product.setLikes(numbLikes);
+            productRepository.save(product);
+            return Pair.of(numbLikes, true);
         }
 
         Likes existingLike = like;
         existingLike.setLiked(!like.isLiked());
+
         int currentLike = product.getLikes();
         if (existingLike.isLiked()){
             currentLike -= 1;
@@ -157,20 +161,14 @@ public class ProductService {
 
         productRepository.save(product);
         likesRepository.save(existingLike);
-        return product.getLikes();
+
+        return Pair.of(currentLike, like.isLiked());
     }
 
-    private Pair<Boolean, Integer> createLike(Product product, User user, LikesId likeId) {
-
-        Integer numbLikes = product.getLikes() + 1;
-
-        product.setLikes(numbLikes);
+    private Likes createLike(Product product, LikesId likeId) {
         productRepository.save(product);
         Likes likes = likesRepository.save(Likes.builder().id(likeId).liked(true).build());
-
-        Pair<Boolean, Integer> pair = new Pair
-
-        return (likes.isLiked(), numbLikes);
+        return likes;
     }
 
 }
