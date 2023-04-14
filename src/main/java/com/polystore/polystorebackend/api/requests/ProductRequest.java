@@ -15,10 +15,10 @@ public class ProductRequest {
     private String username;
     private Date date;
     private String resource;
-        private String thumbnail;
+    private String thumbnail;
     private Double price;
 
-    public static Product convertToProduct(ProductRequest productRequest){
+    public static Product convertToProduct(ProductRequest productRequest) {
 
         User user = new User();
         user.setUsername(productRequest.getUsername());

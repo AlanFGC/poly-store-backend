@@ -4,10 +4,13 @@ import com.polystore.polystorebackend.repository.LikesRepository;
 import com.polystore.polystorebackend.repository.ProductRepository;
 import com.polystore.polystorebackend.repository.ReviewRepository;
 import com.polystore.polystorebackend.repository.SceneRepository;
+import jakarta.persistence.EntityExistsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
+
+import java.security.InvalidParameterException;
 import java.util.Collection;
 import java.util.List;
 
@@ -68,6 +71,8 @@ public class ProductService {
         User user = userService.getUserByName(product.getOwner().getUsername());
         product.setOwner(user);
 
+        product.setLikes(0);
+
         return productRepository.save(product);
     }
     public List<Product> getProductsFromUsername(String username){
@@ -110,9 +115,24 @@ public class ProductService {
 
     // REVIEW
     public Review createtReview(Review review) {
-        productRepository.findById(review.getReviewId().getProductId().getProductId()).orElseThrow();
-        Review newReview = reviewRepository.save(review);
-        return newReview;
+        Product product = productRepository.getReferenceById(review.getReviewId().getProductId().getProductId());
+        User user = userService.getUserByName(review.getReviewId().getUsername().getUsername());
+
+        if (user == null || product == null){
+            throw new InvalidParameterException("product or user or both couldn't be found");
+        }
+
+
+        ReviewId reviewId = new ReviewId();
+        reviewId.setUsername(user);
+        reviewId.setProductId(product);
+        review.setReviewId(reviewId);
+
+        if (reviewRepository.existsById(review.getReviewId())){
+            throw new EntityExistsException("a review has been posted before.");
+        }
+
+        return reviewRepository.save(review);
     }
 
     public List<Review> getReviewsByProductId(int productId) {
@@ -141,7 +161,7 @@ public class ProductService {
 
         // create like from start
         if (like == null) {
-            like = createLike(product, likeId);
+            createLike(product, likeId);
             Integer numbLikes = product.getLikes() + 1;
             product.setLikes(numbLikes);
             productRepository.save(product);
@@ -153,9 +173,9 @@ public class ProductService {
 
         int currentLike = product.getLikes();
         if (existingLike.isLiked()){
-            currentLike -= 1;
-        } else {
             currentLike += 1;
+        } else {
+            currentLike -= 1;
         }
         product.setLikes(currentLike);
 
@@ -166,7 +186,6 @@ public class ProductService {
     }
 
     private Likes createLike(Product product, LikesId likeId) {
-        productRepository.save(product);
         Likes likes = likesRepository.save(Likes.builder().id(likeId).liked(true).build());
         return likes;
     }

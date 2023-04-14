@@ -1,5 +1,5 @@
 package com.polystore.polystorebackend.api.controller;
-import com.polystore.polystorebackend.api.requests.LikeResponse;
+import com.polystore.polystorebackend.api.responses.LikeResponse;
 import com.polystore.polystorebackend.api.requests.ProductRequest;
 import com.polystore.polystorebackend.api.responses.ProductResponse;
 import com.polystore.polystorebackend.model.Product;
@@ -39,13 +39,9 @@ public class ProductController {
 
     @PostMapping("/create")
     public ProductResponse  createProduct(@RequestBody ProductRequest productRequest){
-
         Product product = ProductRequest.convertToProduct(productRequest);
-
         try {
-
             return ProductResponse.productToProductResponse(productService.createProduct(product));
-
         } catch (Exception e) {
             return ProductResponse.productToProductResponse(new Product());
         }
@@ -58,6 +54,11 @@ public class ProductController {
 
     @PutMapping("/like/{id}")
     public ResponseEntity<LikeResponse> increaseLike(Principal principal, @PathVariable int id){
+
+        if (principal.getName() == null){
+            return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
+        }
+
         try {
             Pair<Integer, Boolean> data = productService.giveLike(principal.getName(), id);
             LikeResponse likeResponse = LikeResponse.builder().numberOfLikes(data.getFirst()).productid(id).state(data.getSecond()).build();

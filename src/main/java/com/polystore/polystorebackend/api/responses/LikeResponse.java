@@ -1,4 +1,4 @@
-package com.polystore.polystorebackend.api.requests;
+package com.polystore.polystorebackend.api.responses;
 
 
 import lombok.AllArgsConstructor;

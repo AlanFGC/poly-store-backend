@@ -2,11 +2,14 @@ package com.polystore.polystorebackend.api.responses;
 
 
 import com.polystore.polystorebackend.model.Review;
+import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+
+@Data
 public class ReviewResponse {
 
     private int productId;
