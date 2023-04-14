@@ -26,6 +26,8 @@ public class ReviewResponse {
         reviewResponse.username = review.getReviewId().getUsername().getUsername();
         return reviewResponse;
     }
+
+
     public static List<ReviewResponse> reviewListToreviewResponseList(List<Review> reviews){
         List<ReviewResponse> reviewResponseList = new ArrayList<>();
         for (Review review:

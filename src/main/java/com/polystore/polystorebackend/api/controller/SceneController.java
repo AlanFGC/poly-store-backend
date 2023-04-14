@@ -19,6 +19,4 @@ public class SceneController {
     public String deletedScene(@PathVariable int id){
         return "deleteScene";
     }
-
-
 }

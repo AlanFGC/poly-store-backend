@@ -16,10 +16,8 @@ import java.security.Principal;
 @RestController
 @RequestMapping("/api/secured")
 public class SecuredControllerTest {
-
     @Autowired
     UserService userService;
-
     @GetMapping("/hello")
     public String getHello() {
         return "Hello this is your info \n";
