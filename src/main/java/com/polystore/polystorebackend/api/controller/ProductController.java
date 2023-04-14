@@ -1,4 +1,5 @@
 package com.polystore.polystorebackend.api.controller;
+import com.polystore.polystorebackend.api.requests.ProductRequest;
 import com.polystore.polystorebackend.api.responses.ProductResponse;
 import com.polystore.polystorebackend.model.Product;
 import com.polystore.polystorebackend.service.ProductService;
@@ -6,16 +7,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.security.Principal;
 import java.util.List;
+
 @RestController
 @RequestMapping("/api/products")
 public class ProductController {
+
     @Autowired
     private ProductService productService;
     @GetMapping("/{id}")
     public ProductResponse getProduct(@PathVariable int id){
-        return ProductResponse.productToProductResponse(productService.findById(id));
+        return ProductResponse.productToProductResponse(productService.findProductById(id));
     }
 
     @GetMapping("/list/{n}")
@@ -24,9 +28,21 @@ public class ProductController {
         return ProductResponse.listToProductResponse(productList);
     }
 
+
+    @GetMapping("/listbyuser/{username}")
+    public List<ProductResponse> getProductsByUsername(@PathVariable String username){
+        return ProductResponse.listToProductResponse(productService.getProductsFromUsername(username));
+    }
+
     @PostMapping("/create")
-    public ProductResponse  createProduct(@RequestBody Product product){
-        return ProductResponse.productToProductResponse(productService.createProduct(product));
+    public ProductResponse  createProduct(@RequestBody ProductRequest productRequest){
+        try {
+
+            return ProductResponse.productToProductResponse(productService.createProduct(productRequest));
+
+        } catch (Exception e) {
+            return ProductResponse.productToProductResponse(new Product());
+        }
     }
 
     @DeleteMapping("/{id}")
@@ -43,4 +59,5 @@ public class ProductController {
         }
         return new ResponseEntity<>("Liked changed", HttpStatus.OK);
     }
+
 }

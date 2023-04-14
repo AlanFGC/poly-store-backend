@@ -42,19 +42,6 @@ public class ProductServiceTest {
     void contextLoads() {
     }
 
-    @Test
-    public void postProductTest(){
-        Product product = productService.createProduct(Product.builder()
-                .price(1500.000)
-                .likes(0)
-                .resourceURL("/example/example")
-                .views(0)
-                .owner(userService.getUserByName("alan"))
-                .thumbnailURL("/thumbnail/example")
-                .build());
-
-        System.out.println(product.toString());
-    }
 
 
 

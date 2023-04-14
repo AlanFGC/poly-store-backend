@@ -24,8 +24,7 @@ public class Product {
     private int views;
 
     @ManyToOne
-    @JoinColumn(name = "owner",
-    referencedColumnName = "username")
+    @JoinColumn(name = "owner")
     private User owner;
 
     @Column(name = "resource")

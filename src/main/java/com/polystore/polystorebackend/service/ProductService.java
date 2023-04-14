@@ -1,22 +1,18 @@
 package com.polystore.polystorebackend.service;
 
 
+import com.polystore.polystorebackend.api.requests.ProductRequest;
 import com.polystore.polystorebackend.model.*;
 import com.polystore.polystorebackend.repository.LikesRepository;
 import com.polystore.polystorebackend.repository.ProductRepository;
 import com.polystore.polystorebackend.repository.ReviewRepository;
 import com.polystore.polystorebackend.repository.SceneRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 
 @Service
@@ -55,7 +51,7 @@ public class ProductService {
     }
 
 
-    public Product findById(int id) {
+    public Product findProductById(int id) {
         Product product = productRepository.findById(id).orElse(new Product());
         String owner = product.getOwner().getUsername();
         product.setOwner(User.builder().username(owner).build());
@@ -65,14 +61,21 @@ public class ProductService {
 
     public Product deleteProduct(int id) {
         Product product = productRepository.findById(id).orElseThrow();
-        productRepository.deleteById(product.getProductId());
+        productRepository.deleteById(id);
         return product;
     }
 
-    public Product createProduct(Product product) {
-        User user = userService.getUserById(product.getOwner().getId());
+    public Product createProduct(ProductRequest productRequest) {
+        Product product = ProductRequest.convertToProduct(productRequest);
+        System.out.println(productRequest.getUsername());
+        User user = userService.getUserByName(productRequest.getUsername());
+
         product.setOwner(user);
+
         return productRepository.save(product);
+    }
+    public List<Product> getProductsFromUsername(String username){
+        return productRepository.getProductsByUser(username);
     }
 
 
@@ -121,6 +124,7 @@ public class ProductService {
     }
 
 
+    // LIKES
     // LIKES
     public int getLikes(int productId) {
         Product product = productRepository.findById(productId).orElseThrow();

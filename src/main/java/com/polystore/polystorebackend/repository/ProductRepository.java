@@ -15,4 +15,7 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
 
     @Query(value = "select p from Product p ORDER BY p.productId desc")
     List<Product> getLatest(Pageable pageable);
+
+    @Query(value = "select p from Product p where p.owner.username = :username order by p.date ASC")
+    List<Product> getProductsByUser(String username);
 }
