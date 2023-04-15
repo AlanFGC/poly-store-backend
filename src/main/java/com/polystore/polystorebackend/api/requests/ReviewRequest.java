@@ -22,11 +22,12 @@ public class ReviewRequest {
         Review review = new Review();
         Product product = new Product();
         User user = new User();
-        user.setUsername(username);
 
+        user.setUsername(username);
         review.setReview(reviewRequest.review);
         review.setDate(reviewRequest.date);
         product.setProductId(reviewRequest.productid);
+
         ReviewId reviewId = new ReviewId();
 
         reviewId.setProductId(product);

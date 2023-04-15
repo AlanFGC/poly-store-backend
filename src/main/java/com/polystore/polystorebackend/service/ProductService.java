@@ -1,4 +1,5 @@
 package com.polystore.polystorebackend.service;
+
 import com.polystore.polystorebackend.api.requests.SceneRequest;
 import com.polystore.polystorebackend.model.*;
 import com.polystore.polystorebackend.repository.LikesRepository;
@@ -29,7 +30,6 @@ public class ProductService {
     private ReviewRepository reviewRepository;
 
 
-
     @Autowired
     private SceneRepository sceneRepository;
 
@@ -40,7 +40,7 @@ public class ProductService {
 
     // PRODUCT
     public List<Product> getPageOfSize(int k) {
-        if (k < 0 || k > 50){
+        if (k < 0 || k > 50) {
             throw new IllegalArgumentException();
         }
         return productRepository.findAll(PageRequest.of(1, k).getSort());
@@ -76,7 +76,8 @@ public class ProductService {
 
         return productRepository.save(product);
     }
-    public List<Product> getProductsFromUsername(String username){
+
+    public List<Product> getProductsFromUsername(String username) {
         return productRepository.getProductsByUser(username);
     }
 
@@ -85,14 +86,21 @@ public class ProductService {
 
     public Scene createScene(Scene scene) {
         Product product = productRepository.getReferenceById(scene.getProduct().getProductId());
-        if (product == null) throw new NullPointerException("No product with id given has been found");
+        if (product == null) throw new NullPointerException();
         return sceneRepository.save(scene);
     }
 
     public Scene updateScene(Scene scene) {
-        if (sceneRepository.existsById(scene.getSceneId())) throw new InvalidParameterException("Scene does not exist");
-        return null;
-
+        Scene existingScene = sceneRepository.getReferenceById(scene.getSceneId());
+        existingScene.setFov(scene.getFov());
+        existingScene.setColor(scene.getColor());
+        existingScene.setHdriUrl(scene.getHdriUrl());
+        existingScene.setCameraX(scene.getCameraX());
+        existingScene.setCameraY(scene.getCameraY());
+        existingScene.setCameraZ(scene.getCameraZ());
+        existingScene.setAutoRotate(scene.getAutoRotate());
+        existingScene.setHdriUrl(scene.getHdriUrl());
+        return sceneRepository.save(existingScene);
     }
 
 
@@ -114,7 +122,7 @@ public class ProductService {
         Product product = productRepository.getReferenceById(review.getReviewId().getProductId().getProductId());
         User user = userService.getUserByName(review.getReviewId().getUsername().getUsername());
 
-        if (user == null || product == null){
+        if (user == null || product == null) {
             throw new InvalidParameterException("product or user or both couldn't be found");
         }
 
@@ -124,7 +132,7 @@ public class ProductService {
         reviewId.setProductId(product);
         review.setReviewId(reviewId);
 
-        if (reviewRepository.existsById(review.getReviewId())){
+        if (reviewRepository.existsById(review.getReviewId())) {
             throw new EntityExistsException("a review has been posted before.");
         }
 
@@ -141,7 +149,6 @@ public class ProductService {
         Product product = productRepository.findById(productId).orElseThrow();
         return product.getLikes();
     }
-
 
 
     public Pair<Integer, Boolean> giveLike(String username, int productId) {
@@ -167,7 +174,7 @@ public class ProductService {
         existingLike.setLiked(!like.isLiked());
 
         int currentLike = product.getLikes();
-        if (existingLike.isLiked()){
+        if (existingLike.isLiked()) {
             currentLike += 1;
         } else {
             currentLike -= 1;

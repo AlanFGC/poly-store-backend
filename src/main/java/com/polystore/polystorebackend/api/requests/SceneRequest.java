@@ -11,7 +11,6 @@ import java.security.InvalidParameterException;
 public class SceneRequest {
 
     private int productId;
-    private String username;
     private String color;
     private int[] cameraPosition;
     private short fov;
