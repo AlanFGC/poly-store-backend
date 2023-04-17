@@ -27,7 +27,7 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final TokenRepository tokenRepository;
 
-    public AuthenticationResponse register(RegisterRequest request) {
+    public RegisterResponse register(RegisterRequest request) {
         var user = User.builder()
                 .username(request.getUsername())
                 .email(request.getEmail())
@@ -38,31 +38,29 @@ public class AuthenticationService {
         repository.save(user);
         var jwtToken = jwtService.generateToken(user);
         this.saveUserToken(user, jwtToken);
-        return AuthenticationResponse.builder()
-                .token(jwtToken)
-                .build();
+
+        RegisterResponse registerResponse = new RegisterResponse();
+        registerResponse.setUsername(request.getUsername());
+        registerResponse.setRole(Role.USER.toString());
+        registerResponse.setToken(jwtToken);
+        return registerResponse;
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
-        try {
-            Authentication auth = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            request.getUsername(),
-                            request.getPassword()
-                    )
-            );
-            User user = repository.findByUsername(request.getUsername()).orElse(new User());
-            System.out.println("USERNAME: " + user.getUsername() + user.getPassword() + user.getEmail());
-            revokeAllUserTokens(user);
-            String jwtToken = jwtService.generateToken(user);
-            saveUserToken(user, jwtToken);
-            return new AuthenticationResponse(jwtToken, "");
-        } catch (Exception e) {
-            System.out.println("ERROR:" + e);
-            // never let them know your next move
-            // TODO figure out a better message
-            return new AuthenticationResponse("INVALID", "BAD CREDENTIALS");
-        }
+
+        Authentication auth = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        request.getUsername(),
+                        request.getPassword()
+                )
+        );
+        User user = repository.findByUsername(request.getUsername()).orElse(new User());
+        System.out.println("USERNAME: " + user.getUsername() + user.getPassword() + user.getEmail());
+        revokeAllUserTokens(user);
+        String jwtToken = jwtService.generateToken(user);
+        saveUserToken(user, jwtToken);
+        return new AuthenticationResponse(jwtToken, "");
+
     }
 
     private void saveUserToken(User user, String jwtToken) {
@@ -77,7 +75,7 @@ public class AuthenticationService {
     }
 
     private void revokeAllUserTokens(User user) {
-        System.out.println("USER ID:" +  user.getId());
+        System.out.println("USER ID:" + user.getId());
         List<Token> validUserTokens = tokenRepository.findAllValidTokenByUser(user.getId());
         if (validUserTokens.isEmpty()) return;
         validUserTokens.forEach(token -> {
