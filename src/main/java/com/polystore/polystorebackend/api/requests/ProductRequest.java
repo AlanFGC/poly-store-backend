@@ -18,6 +18,9 @@ public class ProductRequest {
     private String thumbnail;
     private Double price;
 
+    private String title;
+    private String description;
+
     public static Product convertToProduct(ProductRequest productRequest) {
 
         User user = new User();
@@ -30,6 +33,8 @@ public class ProductRequest {
                 .resourceURL(productRequest.resource)
                 .thumbnailURL(productRequest.thumbnail)
                 .date(productRequest.date)
+                .description(productRequest.description)
+                .title(productRequest.title)
                 .build();
     }
 

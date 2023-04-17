@@ -20,9 +20,19 @@ public class ProductController {
     @Autowired
     private ProductService productService;
     @GetMapping("/{id}")
-    public ProductResponse getProduct(@PathVariable int id){
-        ProductResponse response = ProductResponse.productToProductResponse(productService.findProductById(id));
-        return response;
+    public ResponseEntity<ProductResponse> getProduct(@PathVariable int id){
+        try {
+            ProductResponse response = ProductResponse.productToProductResponse(productService.findProductById(id));
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("keyword={word}")
+    public ResponseEntity<List<ProductResponse>> searchProduct(@PathVariable("word") String word){
+        List<ProductResponse> response = ProductResponse.listToProductResponse(productService.searchProducts(word));
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/list/{n}")
@@ -67,4 +77,5 @@ public class ProductController {
             return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
         }
     }
+
 }

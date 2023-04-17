@@ -13,6 +13,7 @@ import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 
 import java.security.InvalidParameterException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -79,6 +80,16 @@ public class ProductService {
 
     public List<Product> getProductsFromUsername(String username) {
         return productRepository.getProductsByUser(username);
+    }
+
+
+    public List<Product> searchProducts(String keyword) {
+        String regexPattern = "^[a-zA-Z0-9_\\s]+$";
+        boolean result = keyword.matches(regexPattern);
+        if (!result) {
+            return new ArrayList<>();
+        }
+        return productRepository.getProductsByKeyword(keyword);
     }
 
 

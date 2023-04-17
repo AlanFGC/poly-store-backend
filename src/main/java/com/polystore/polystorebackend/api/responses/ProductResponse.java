@@ -26,6 +26,8 @@ public class ProductResponse {
     private String resourceURL;
     private String thumbnailURL;
     private Date date;
+    private String description;
+    private String title;
     public static ProductResponse productToProductResponse(Product product) {
         if(product == null){
             return new ProductResponse();
@@ -39,6 +41,8 @@ public class ProductResponse {
         productResponse.resourceURL = product.getResourceURL();
         productResponse.thumbnailURL = product.getThumbnailURL();
         productResponse.date = product.getDate();
+        productResponse.title = product.getTitle();
+        productResponse.description = product.getDescription();
         return productResponse;
     }
 

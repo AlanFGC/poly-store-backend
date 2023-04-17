@@ -18,4 +18,7 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
 
     @Query(value = "select p from Product p where p.owner.username = :username order by p.date ASC")
     List<Product> getProductsByUser(String username);
+
+    @Query(value = "select p from Product p where p.title LIKE %:keyword% or p.description LIKE %:keyword% or p.owner.username LIKE %:keyword% order by p.date asc limit 25")
+    List<Product> getProductsByKeyword(String keyword);
 }

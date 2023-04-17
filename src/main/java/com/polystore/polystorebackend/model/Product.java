@@ -34,4 +34,9 @@ public class Product {
     private String thumbnailURL;
 
     private Date date;
+
+    private String title;
+    private String description;
+
+
 }
