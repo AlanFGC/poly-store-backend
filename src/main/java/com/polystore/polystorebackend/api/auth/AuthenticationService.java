@@ -60,7 +60,17 @@ public class AuthenticationService {
         revokeAllUserTokens(user);
         String jwtToken = jwtService.generateToken(user);
         saveUserToken(user, jwtToken);
-        return new AuthenticationResponse(jwtToken, "");
+
+
+        AuthenticationResponse authenticationResponse = AuthenticationResponse.builder()
+                .username(user.getUsername())
+                .role(user.getRole().toString())
+                .token(jwtToken)
+                .error("")
+                .email(user.getEmail())
+                .build();
+
+        return authenticationResponse;
 
     }
 
