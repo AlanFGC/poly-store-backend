@@ -4,7 +4,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.SQLException;
+
 @RestController
+@CrossOrigin
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
 public class AuthenticationController {
@@ -13,8 +16,12 @@ public class AuthenticationController {
 
     @PostMapping("/register")
     public ResponseEntity<RegisterResponse> register(@RequestBody RegisterRequest request) {
-        RegisterResponse response = service.register(request);
-        return ResponseEntity.ok(response);
+        try {
+            RegisterResponse response = service.register(request);
+            return ResponseEntity.ok(response);
+        }catch (SQLException e){
+            return new ResponseEntity<>(null, HttpStatus.CONFLICT);
+        }
     }
 
 

@@ -15,6 +15,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLException;
 import java.util.List;
 
 @Service
@@ -27,7 +28,7 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final TokenRepository tokenRepository;
 
-    public RegisterResponse register(RegisterRequest request) {
+    public RegisterResponse register(RegisterRequest request) throws SQLException {
         var user = User.builder()
                 .username(request.getUsername())
                 .email(request.getEmail())
