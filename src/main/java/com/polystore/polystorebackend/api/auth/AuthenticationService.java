@@ -8,12 +8,15 @@ import com.polystore.polystorebackend.model.User;
 import com.polystore.polystorebackend.repository.TokenRepository;
 import com.polystore.polystorebackend.repository.UserRepository;
 import com.polystore.polystorebackend.service.JwtService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.http.HttpHeaders;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -56,8 +59,8 @@ public class AuthenticationService {
                 )
         );
         User user = repository.findByUsername(request.getUsername()).orElse(new User());
-        System.out.println("USERNAME: " + user.getUsername() + user.getPassword() + user.getEmail());
-        revokeAllUserTokens(user);
+
+        revokeUser(user);
         String jwtToken = jwtService.generateToken(user);
         saveUserToken(user, jwtToken);
 
@@ -74,6 +77,11 @@ public class AuthenticationService {
 
     }
 
+
+    public void logoutUser(String username){
+        User user = repository.findByUsername(username).orElseThrow();
+        revokeUser(user);
+    }
     private void saveUserToken(User user, String jwtToken) {
         var token = Token.builder()
                 .user(user)
@@ -85,15 +93,53 @@ public class AuthenticationService {
         tokenRepository.save(token);
     }
 
-    private void revokeAllUserTokens(User user) {
-        System.out.println("USER ID:" + user.getId());
-        List<Token> validUserTokens = tokenRepository.findAllValidTokenByUser(user.getId());
-        if (validUserTokens.isEmpty()) return;
-        validUserTokens.forEach(token -> {
+
+
+    private void  revokeUser(User user) {
+
+        List<Token> tokens = tokenRepository.findAllValidTokenByUser(user.getId());
+        if (tokens.isEmpty()) return;
+
+        for (Token token: tokens){
             token.setExpired(true);
             token.setRevoked(true);
-        });
-        tokenRepository.saveAll(validUserTokens);
+        }
+        tokenRepository.saveAll(tokens);
     }
+
+
+    // grabs the token from the header and returns a new token
+    AuthenticationResponse refreshToken(HttpServletRequest request, HttpServletResponse response){
+        String header = request.getHeader(HttpHeaders.AUTHORIZATION);
+
+        if (header == null || !header.startsWith("Bearer ")) {
+            throw new IllegalArgumentException("Bad Request");
+        }
+
+        String refreshToken = header.substring(7);
+
+        String username = jwtService.extractUsername(refreshToken);
+        if (username == null) throw new IllegalArgumentException("Invalid token");
+        User user = repository.findByUsername(username).orElseThrow();
+
+        if (jwtService.isTokenValid(refreshToken, user)) {
+            this.revokeUser(user);
+            String newToken = jwtService.generateToken(user);
+            saveUserToken(user, newToken);
+            AuthenticationResponse authenticationResponse = AuthenticationResponse.builder()
+                    .username(user.getUsername())
+                    .role(user.getRole().toString())
+                    .token(newToken)
+                    .error("")
+                    .email(user.getEmail())
+                    .build();
+            return authenticationResponse;
+        }
+
+        throw new IllegalArgumentException("Token is not valid");
+    }
+
+
+
 }
 
