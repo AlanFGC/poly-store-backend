@@ -1,15 +1,11 @@
 package com.polystore.polystorebackend.api.auth;
 
-import com.polystore.polystorebackend.model.User;
-import com.polystore.polystorebackend.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.io.IOException;
 import java.security.Principal;
 import java.sql.SQLException;
 
