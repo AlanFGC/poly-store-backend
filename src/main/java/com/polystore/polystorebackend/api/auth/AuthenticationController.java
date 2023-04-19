@@ -56,7 +56,7 @@ public class AuthenticationController {
         }
     }
 
-    @PutMapping("/logout")
+    @PostMapping("/logout")
     public ResponseEntity logout(Principal principal) {
         service.logoutUser(principal.getName());
         return ResponseEntity.ok(null);
