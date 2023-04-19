@@ -26,7 +26,8 @@ public class SceneResponse {
     private int[] cameraPosition;
     private short fov;
     private Boolean autoRotate;
-    private String hdriUrl;
+    private String hdri;
+
 
     public static SceneResponse sceneToSceneResponse(Scene scene){
         SceneResponse sceneResponse = new SceneResponse();
@@ -36,7 +37,7 @@ public class SceneResponse {
         sceneResponse.cameraPosition[0] = scene.getCameraX();
         sceneResponse.cameraPosition[1] = scene.getCameraY();
         sceneResponse.cameraPosition[2] = scene.getCameraZ();
-        sceneResponse.hdriUrl = scene.getHdriUrl();
+        sceneResponse.hdri = scene.getHdriUrl();
         sceneResponse.sceneId = scene.getSceneId();
         sceneResponse.color = scene.getColor();
         sceneResponse.productId = scene.getProduct().getProductId();
