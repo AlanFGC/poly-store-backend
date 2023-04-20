@@ -32,17 +32,21 @@ public class AuthenticationService {
     private final TokenRepository tokenRepository;
 
     public RegisterResponse register(RegisterRequest request) throws SQLException {
+        Role role = Role.USER;
+
+        if (request.getRole().toLowerCase() == "creator") {
+            role = Role.CREATOR;
+        }
+
         var user = User.builder()
                 .username(request.getUsername())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
-                // TODO add more roles.
-                .role(Role.USER)
+                .role(role)
                 .build();
         repository.save(user);
         var jwtToken = jwtService.generateToken(user);
         this.saveUserToken(user, jwtToken);
-
         RegisterResponse registerResponse = new RegisterResponse();
         registerResponse.setUsername(request.getUsername());
         registerResponse.setRole(Role.USER.toString());

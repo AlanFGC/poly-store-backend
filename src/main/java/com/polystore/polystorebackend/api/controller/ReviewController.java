@@ -24,7 +24,6 @@ public class ReviewController {
     public ResponseEntity<ReviewResponse> postReview(Principal principal, @RequestBody ReviewRequest reviewRequest){
         if (principal == null){
             return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
-
         }
         try {
             Review review  = ReviewRequest.reviewRequestToReview(reviewRequest, principal.getName());
@@ -48,4 +47,17 @@ public class ReviewController {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
+
+    @DeleteMapping("/delete/{productId}")
+    public ResponseEntity<ReviewResponse> deleteReviewFromProductUser(@PathVariable int productId, Principal principal){
+        try {
+            String username = principal.getName();
+            productService.deleteReview(username, productId);
+            return new ResponseEntity<>(null, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+
 }

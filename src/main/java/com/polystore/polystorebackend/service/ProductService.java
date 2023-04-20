@@ -203,4 +203,14 @@ public class ProductService {
         return likes;
     }
 
+    public void deleteReview(String username, int productId){
+        User user = userService.getUserByName(username);
+        Product product = productRepository.getReferenceById(productId);
+
+        ReviewId reviewId = new ReviewId();
+        reviewId.setProductId(product);
+        reviewId.setUsername(user);
+        reviewRepository.deleteById(reviewId);
+    }
+
 }
