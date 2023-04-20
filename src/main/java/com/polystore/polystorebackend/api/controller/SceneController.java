@@ -17,10 +17,16 @@ public class SceneController {
 
     @Autowired
     private ProductService productService;
-    @GetMapping("/{id}")
-    public String getScene(@PathVariable int id){
-        return "Getting scene" + id;
+    @GetMapping("/product/{productId}")
+    public ResponseEntity<SceneResponse> getSceneByProductId(@PathVariable int productId){
+        try {
+            Scene scene = productService.getSceneByProductId(productId);
+            return new ResponseEntity<>(SceneResponse.sceneToSceneResponse(scene), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
     }
+
     @PostMapping("/create")
     public ResponseEntity<SceneResponse> createScene(@RequestBody SceneRequest sceneRequest){
         try {

@@ -12,19 +12,17 @@ import java.util.Date;
 @NonNull
 public class ProductRequest {
 
-    private String username;
     private Date date;
     private String resource;
     private String thumbnail;
     private Double price;
-
     private String title;
     private String description;
 
-    public static Product convertToProduct(ProductRequest productRequest) {
+    public static Product convertToProduct(ProductRequest productRequest,String username) {
 
         User user = new User();
-        user.setUsername(productRequest.getUsername());
+        user.setUsername(username);
         return Product.builder()
                 .likes(0)
                 .price(productRequest.price)
