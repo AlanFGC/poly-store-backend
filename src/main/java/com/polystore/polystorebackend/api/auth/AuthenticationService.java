@@ -114,6 +114,9 @@ public class AuthenticationService {
 
     // grabs the token from the header and returns a new token
     AuthenticationResponse refreshToken(HttpServletRequest request, HttpServletResponse response){
+
+
+
         String header = request.getHeader(HttpHeaders.AUTHORIZATION);
 
         if (header == null || !header.startsWith("Bearer ")) {
@@ -126,7 +129,25 @@ public class AuthenticationService {
         if (username == null) throw new IllegalArgumentException("Invalid token");
         User user = repository.findByUsername(username).orElseThrow();
 
+
+        // if the time left is > one hour
+        // return same thing!
+
+        if (jwtService.getTimeBeforeExpiration(refreshToken) < (25 * 10000)){
+            System.out.println("TIME IS LESS THAN THIS, we can continue browsing");
+            return AuthenticationResponse.builder()
+                    .username(user.getUsername())
+                    .role(user.getRole().toString())
+                    .token(refreshToken)
+                    .error("")
+                    .email(user.getEmail())
+                    .build();
+        }
+
+
+
         if (jwtService.isTokenValid(refreshToken, user)) {
+            System.out.println("REVOKING!!");
             this.revokeUser(user);
             String newToken = jwtService.generateToken(user);
             saveUserToken(user, newToken);
@@ -142,6 +163,8 @@ public class AuthenticationService {
 
         throw new IllegalArgumentException("Token is not valid");
     }
+
+
 
 
 
