@@ -134,7 +134,7 @@ public class AuthenticationService {
         // return same thing!
 
         if (jwtService.getTimeBeforeExpiration(refreshToken) < (25 * 10000)){
-            System.out.println("TIME IS LESS THAN THIS, we can continue browsing");
+            //System.out.println("TIME IS LESS THAN THIS, we can continue browsing");
             return AuthenticationResponse.builder()
                     .username(user.getUsername())
                     .role(user.getRole().toString())
