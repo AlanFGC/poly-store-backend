@@ -16,6 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/products")
+@CrossOrigin
 public class ProductController {
 
     @Autowired
@@ -51,6 +52,9 @@ public class ProductController {
 
     @PostMapping("/create")
     public ResponseEntity<ProductResponse> createProduct(@RequestBody ProductRequest productRequest, Principal principal) {
+        if (principal.getName() == null) {
+            return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
+        }
         try {
             Product product = ProductRequest.convertToProduct(productRequest, principal.getName());
             ProductResponse response = ProductResponse.productToProductResponse(productService.createProduct(product));
@@ -77,6 +81,7 @@ public class ProductController {
             LikeResponse likeResponse = LikeResponse.builder().numberOfLikes(data.getFirst()).productid(id).state(data.getSecond()).build();
             return new ResponseEntity(likeResponse, HttpStatus.OK);
         } catch (Exception e) {
+
             return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
         }
     }
