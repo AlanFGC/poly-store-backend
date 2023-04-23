@@ -88,6 +88,8 @@ public class ProductController {
         return ProductResponse.productToProductResponse(productService.deleteProduct(id));
     }
 
+
+    @Transactional
     @PutMapping("/like/{id}")
     public ResponseEntity<LikeResponse> increaseLike(Principal principal, @PathVariable int id) {
 

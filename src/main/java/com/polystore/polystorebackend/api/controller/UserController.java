@@ -2,6 +2,7 @@ package com.polystore.polystorebackend.api.controller;
 
 import com.polystore.polystorebackend.model.User;
 import com.polystore.polystorebackend.service.UserService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -46,6 +47,8 @@ public class UserController {
     }
 
 
+
+    @Transactional
     @PutMapping("/update-user")
     public User updateUser(@RequestBody User user){
         return userService.updateUser(user);
