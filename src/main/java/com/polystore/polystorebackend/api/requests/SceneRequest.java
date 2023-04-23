@@ -15,7 +15,7 @@ public class SceneRequest {
     private int[] cameraPosition;
     private short fov;
     private boolean autoRotate;
-    private String hdri;
+    private String hdr;
 
     public static Scene sceneRequestToScene(SceneRequest sceneRequest){
         if (sceneRequest.cameraPosition.length != 3) throw new InvalidParameterException();
@@ -26,7 +26,7 @@ public class SceneRequest {
         scene.setFov(sceneRequest.fov);
         scene.setAutoRotate(sceneRequest.autoRotate);
         scene.setColor(sceneRequest.color);
-        scene.setHdriUrl(sceneRequest.hdri);
+        scene.setHdriUrl(sceneRequest.hdr);
         Product product = new Product();
         product.setProductId(sceneRequest.productId);
         scene.setProduct(product);

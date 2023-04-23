@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 
 
@@ -55,10 +54,17 @@ public class ProductService {
 
 
     public Product findProductById(int id) {
-        Product product = productRepository.findById(id).orElse(new Product());
+        Product product = productRepository.findById(id).orElseThrow();
+        productRepository.save(product);
         String owner = product.getOwner().getUsername();
         product.setOwner(User.builder().username(owner).build());
         return product;
+    }
+
+    public void giveView(int id){
+        Product product = productRepository.findById(id).orElseThrow();
+        product.setViews(product.getViews() + 1);
+        productRepository.save(product);
     }
 
 
@@ -69,8 +75,6 @@ public class ProductService {
     }
 
     public Product createProduct(Product product) {
-
-
         User user = userService.getUserByName(product.getOwner().getUsername());
         product.setOwner(user);
 
@@ -98,6 +102,7 @@ public class ProductService {
 
     public Scene createScene(Scene scene) {
         Product product = productRepository.getReferenceById(scene.getProduct().getProductId());
+        productRepository.save(product);
         if (product == null) throw new NullPointerException();
         return sceneRepository.save(scene);
     }

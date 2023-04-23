@@ -1,7 +1,7 @@
 package com.polystore.polystorebackend.model;
 
 public enum Role {
-    ANY,
+    VISITOR,
     USER,
     CREATOR,
     ADMIN

@@ -5,6 +5,7 @@ import com.polystore.polystorebackend.api.requests.ProductRequest;
 import com.polystore.polystorebackend.api.responses.ProductResponse;
 import com.polystore.polystorebackend.model.Product;
 import com.polystore.polystorebackend.service.ProductService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Pair;
 import org.springframework.http.HttpStatus;
@@ -28,9 +29,26 @@ public class ProductController {
             ProductResponse response = ProductResponse.productToProductResponse(productService.findProductById(id));
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
+            System.out.println(e);
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
     }
+
+
+
+    @Transactional
+    @PutMapping("/{id}")
+    public ResponseEntity<ProductResponse> putView(@PathVariable int id) {
+        try {
+            productService.giveView(id);
+            return new ResponseEntity<>(null, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+
+
 
     @GetMapping("/keyword={word}")
     public ResponseEntity<List<ProductResponse>> searchProduct(@PathVariable("word") String word) {
@@ -58,6 +76,7 @@ public class ProductController {
         try {
             Product product = ProductRequest.convertToProduct(productRequest, principal.getName());
             ProductResponse response = ProductResponse.productToProductResponse(productService.createProduct(product));
+            System.out.println(response.getOwner() + response.getProductId() + response.getDate() + response.getResourceURL() + response.getThumbnailURL());
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
