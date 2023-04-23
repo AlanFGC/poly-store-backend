@@ -29,7 +29,6 @@ public class ProductController {
             ProductResponse response = ProductResponse.productToProductResponse(productService.findProductById(id));
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
-            System.out.println(e);
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
     }
@@ -70,15 +69,13 @@ public class ProductController {
 
     @PostMapping("/create")
     public ResponseEntity<ProductResponse> createProduct(@RequestBody ProductRequest productRequest, Principal principal) {
-        if (principal == null) {
-            return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
-        }
         try {
             Product product = ProductRequest.convertToProduct(productRequest, principal.getName());
             ProductResponse response = ProductResponse.productToProductResponse(productService.createProduct(product));
             System.out.println(response.getOwner() + response.getProductId() + response.getDate() + response.getResourceURL() + response.getThumbnailURL());
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
+            System.out.println(e);
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }

@@ -1,5 +1,6 @@
 package com.polystore.polystorebackend.service;
 
+import com.polystore.polystorebackend.api.requests.ReviewRequest;
 import com.polystore.polystorebackend.api.requests.SceneRequest;
 import com.polystore.polystorebackend.model.*;
 import com.polystore.polystorebackend.repository.LikesRepository;
@@ -135,25 +136,31 @@ public class ProductService {
 
 
     // REVIEW
-    public Review createtReview(Review review) {
-        Product product = productRepository.getReferenceById(review.getReviewId().getProductId().getProductId());
-        User user = userService.getUserByName(review.getReviewId().getUsername().getUsername());
+    public Review createtReview(ReviewRequest review, String username) {
+
+        User user = userService.getUserByName(username);
+
+        Product product = productRepository.getReferenceById(review.productId);
 
         if (user == null || product == null) {
             throw new InvalidParameterException("product or user or both couldn't be found");
         }
 
-
         ReviewId reviewId = new ReviewId();
         reviewId.setUsername(user);
         reviewId.setProductId(product);
-        review.setReviewId(reviewId);
 
-        if (reviewRepository.existsById(review.getReviewId())) {
+
+        if (reviewRepository.existsById(reviewId)) {
             throw new EntityExistsException("a review has been posted before.");
         }
 
-        return reviewRepository.save(review);
+        Review newReview = new Review();
+        newReview.setReviewId(reviewId);
+        newReview.setDate(review.date);
+        newReview.setReview(review.getReview());
+
+        return reviewRepository.save(newReview);
     }
 
     public List<Review> getReviewsByProductId(int productId) {

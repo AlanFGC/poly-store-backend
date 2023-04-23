@@ -13,7 +13,7 @@ import java.util.Date;
 @Data
 @Builder
 public class ReviewRequest {
-    public int productid;
+    public int productId;
     public String review;
     public Date date;
 
@@ -26,7 +26,7 @@ public class ReviewRequest {
         user.setUsername(username);
         review.setReview(reviewRequest.review);
         review.setDate(reviewRequest.date);
-        product.setProductId(reviewRequest.productid);
+        product.setProductId(reviewRequest.productId);
 
         ReviewId reviewId = new ReviewId();
 

@@ -23,12 +23,8 @@ public class ReviewController {
 
     @PostMapping("/post")
     public ResponseEntity<ReviewResponse> postReview(Principal principal, @RequestBody ReviewRequest reviewRequest){
-        if (principal == null){
-            return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
-        }
         try {
-            Review review  = ReviewRequest.reviewRequestToReview(reviewRequest, principal.getName());
-            productService.createtReview(review);
+            Review review = productService.createtReview(reviewRequest, principal.getName());
             return new ResponseEntity<>(ReviewResponse.reviewToReviewResponse(review), HttpStatus.OK);
         } catch (Exception e){
             System.out.println(e);
