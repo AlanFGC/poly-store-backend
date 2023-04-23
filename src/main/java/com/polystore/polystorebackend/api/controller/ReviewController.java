@@ -16,6 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/review")
 @AllArgsConstructor
+@CrossOrigin
 public class ReviewController {
 
     private final ProductService productService;

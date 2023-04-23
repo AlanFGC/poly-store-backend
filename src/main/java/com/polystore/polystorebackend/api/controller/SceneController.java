@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/scene")
+@CrossOrigin
 public class SceneController {
 
     @Autowired

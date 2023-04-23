@@ -52,7 +52,7 @@ public class ProductController {
 
     @PostMapping("/create")
     public ResponseEntity<ProductResponse> createProduct(@RequestBody ProductRequest productRequest, Principal principal) {
-        if (principal.getName() == null) {
+        if (principal == null) {
             return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
         }
         try {
