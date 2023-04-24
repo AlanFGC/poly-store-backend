@@ -1,5 +1,6 @@
 package com.polystore.polystorebackend.service;
 
+import com.polystore.polystorebackend.api.requests.UserModifyRequest;
 import com.polystore.polystorebackend.model.User;
 import com.polystore.polystorebackend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,7 @@ public class UserService {
 
 
     public User getUserByName(String username){
-        return userRepository.findUserByUsername(username);
+        return userRepository.findUserByUsername(username).orElseThrow();
     }
 
     public String deleteById(int id){
@@ -50,5 +51,11 @@ public class UserService {
 
     public User getReferenceById(int id){
         return userRepository.getReferenceById(id);
+    }
+
+    public User edit(String username, UserModifyRequest request) {
+        User user = userRepository.findUserByUsername(username).orElseThrow();
+        user.setEmail(request.email);
+        return userRepository.save(user);
     }
 }

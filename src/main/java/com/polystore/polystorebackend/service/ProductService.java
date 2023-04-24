@@ -49,7 +49,7 @@ public class ProductService {
     }
 
 
-    public Collection<Product> getAll() {
+    public List<Product> getAll() {
         return productRepository.findAll();
     }
 

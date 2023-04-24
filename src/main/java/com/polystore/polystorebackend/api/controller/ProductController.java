@@ -61,6 +61,10 @@ public class ProductController {
         return ProductResponse.listToProductResponse(productList);
     }
 
+    @GetMapping("/findAll")
+    public ResponseEntity<?> findAll(){
+        return new ResponseEntity<>(ProductResponse.listToProductResponse(productService.getAll()), HttpStatus.OK);
+    }
 
     @GetMapping("/listbyuser/{username}")
     public List<ProductResponse> getProductsByUsername(@PathVariable String username) {
@@ -103,6 +107,10 @@ public class ProductController {
             return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
         }
     }
+
+
+
+
 
 
 
