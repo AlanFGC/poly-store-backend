@@ -2,6 +2,7 @@ package com.polystore.polystorebackend.api.controller;
 
 
 import com.polystore.polystorebackend.api.requests.ReviewRequest;
+import com.polystore.polystorebackend.api.requests.ReviewUpdateRequest;
 import com.polystore.polystorebackend.api.responses.ReviewResponse;
 import com.polystore.polystorebackend.model.Review;
 import com.polystore.polystorebackend.service.ProductService;
@@ -25,7 +26,7 @@ public class ReviewController {
     @PostMapping("/post")
     public ResponseEntity<ReviewResponse> postReview(Principal principal, @RequestBody ReviewRequest reviewRequest){
         try {
-            Review review = productService.createtReview(reviewRequest, principal.getName());
+            Review review = productService.updateReview(principal.getName(), productId, request);
             return new ResponseEntity<>(ReviewResponse.reviewToReviewResponse(review), HttpStatus.OK);
         } catch (Exception e){
             System.out.println(e);
@@ -48,8 +49,8 @@ public class ReviewController {
 
 
     @Transactional
-    @PutMapping("/post")
-    public ResponseEntity<ReviewResponse> updateReview(Principal principal, @RequestBody ReviewRequest reviewRequest){
+    @PutMapping("/update/{productId}")
+    public ResponseEntity<ReviewResponse> updateReview(Principal principal, @PathVariable int productId, @RequestBody ReviewUpdateRequest request){
         try {
             Review review = productService.updateReview(reviewRequest, principal.getName());
             return new ResponseEntity<>(ReviewResponse.reviewToReviewResponse(review), HttpStatus.OK);
