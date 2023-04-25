@@ -1,6 +1,7 @@
 package com.polystore.polystorebackend.service;
 
 import com.polystore.polystorebackend.api.requests.ReviewRequest;
+import com.polystore.polystorebackend.api.requests.ReviewUpdateRequest;
 import com.polystore.polystorebackend.api.requests.SceneRequest;
 import com.polystore.polystorebackend.model.*;
 import com.polystore.polystorebackend.repository.LikesRepository;
@@ -200,6 +201,22 @@ public class ProductService {
     }
 
 
+
+    public Review updateReview(String name, int productId, ReviewUpdateRequest request) {
+        User user = userService.getUserByName(name);
+        Product product = productRepository.getReferenceById(productId);
+
+        ReviewId reviewId = new ReviewId();
+        reviewId.setProductId(product);
+        reviewId.setUsername(user);
+
+        Review review = reviewRepository.findById(reviewId).orElseThrow();
+        review.setReview(request.getReview());
+        review.setDate(request.getDate());
+        return reviewRepository.save(review);
+    }
+
+
     // LIKES
     public int getLikes(int productId) {
         Product product = productRepository.findById(productId).orElseThrow();
@@ -257,5 +274,6 @@ public class ProductService {
         reviewId.setUsername(user);
         reviewRepository.deleteById(reviewId);
     }
+
 
 }
