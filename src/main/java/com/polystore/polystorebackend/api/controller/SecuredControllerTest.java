@@ -4,7 +4,6 @@ package com.polystore.polystorebackend.api.controller;
 import com.polystore.polystorebackend.model.User;
 import com.polystore.polystorebackend.repository.ProductRepository;
 import com.polystore.polystorebackend.service.UserService;
-import netscape.javascript.JSObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
