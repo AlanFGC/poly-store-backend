@@ -170,10 +170,10 @@ public class ProductService {
     }
 
 
-    public Review updateReview(ReviewRequest review, String username){
+    public Review updateReview(ReviewUpdateRequest review, int productId, String username){
 
         User user = userService.getUserByName(username);
-        Product product = productRepository.getReferenceById(review.productId);
+        Product product = productRepository.getReferenceById(productId);
         ReviewId reviewId = new ReviewId();
 
         reviewId.setProductId(product);

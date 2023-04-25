@@ -24,24 +24,24 @@ public class ReviewController {
     private final ProductService productService;
 
     @PostMapping("/post")
-    public ResponseEntity<ReviewResponse> postReview(Principal principal, @RequestBody ReviewRequest reviewRequest){
+    public ResponseEntity<ReviewResponse> postReview(Principal principal, @RequestBody ReviewRequest reviewRequest) {
         try {
-            Review review = productService.updateReview(principal.getName(), productId, request);
+            Review review = productService.createtReview(reviewRequest, principal.getName());
             return new ResponseEntity<>(ReviewResponse.reviewToReviewResponse(review), HttpStatus.OK);
-        } catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e);
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @GetMapping("/{productId}")
-    public ResponseEntity<List<ReviewResponse>> getReviewsFromProduct(@PathVariable int productId){
+    public ResponseEntity<List<ReviewResponse>> getReviewsFromProduct(@PathVariable int productId) {
         try {
             return new ResponseEntity<>(
                     ReviewResponse.reviewListToreviewResponseList(productService.getReviewsByProductId(productId)),
                     HttpStatus.OK
             );
-        }catch (Exception e) {
+        } catch (Exception e) {
             System.out.println(e);
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
@@ -50,11 +50,11 @@ public class ReviewController {
 
     @Transactional
     @PutMapping("/update/{productId}")
-    public ResponseEntity<ReviewResponse> updateReview(Principal principal, @PathVariable int productId, @RequestBody ReviewUpdateRequest request){
+    public ResponseEntity<ReviewResponse> updateReview(Principal principal, @PathVariable int productId, @RequestBody ReviewUpdateRequest request) {
         try {
-            Review review = productService.updateReview(reviewRequest, principal.getName());
+            Review review = productService.updateReview(request, productId, principal.getName());
             return new ResponseEntity<>(ReviewResponse.reviewToReviewResponse(review), HttpStatus.OK);
-        } catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e);
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -62,7 +62,7 @@ public class ReviewController {
 
 
     @DeleteMapping("/delete/{productId}")
-    public ResponseEntity<ReviewResponse> deleteReviewFromProductUser(@PathVariable int productId, Principal principal){
+    public ResponseEntity<ReviewResponse> deleteReviewFromProductUser(@PathVariable int productId, Principal principal) {
         try {
             String username = principal.getName();
             productService.deleteReview(username, productId);
