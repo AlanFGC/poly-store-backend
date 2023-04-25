@@ -2,6 +2,7 @@ package com.polystore.polystorebackend.api.responses;
 
 
 import com.polystore.polystorebackend.model.Product;
+import com.polystore.polystorebackend.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -33,7 +34,10 @@ public class ProductResponse {
         productResponse.likes = product.getLikes();
         productResponse.price = product.getPrice();
         productResponse.views = product.getViews();
-        productResponse.owner = product.getOwner().getUsername();
+
+        User user = product.getOwner();
+        if (user != null) productResponse.owner = user.getUsername();
+
         productResponse.resourceURL = product.getResourceURL();
         productResponse.thumbnailURL = product.getThumbnailURL();
         productResponse.date = product.getDate();

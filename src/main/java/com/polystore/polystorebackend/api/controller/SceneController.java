@@ -6,6 +6,7 @@ import com.polystore.polystorebackend.api.responses.SceneResponse;
 import com.polystore.polystorebackend.model.Product;
 import com.polystore.polystorebackend.model.Scene;
 import com.polystore.polystorebackend.service.ProductService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,6 +45,8 @@ public class SceneController {
     }
 
 
+
+    @Transactional
     @PutMapping("/update")
     public ResponseEntity<SceneResponse> updateScene(@RequestBody SceneRequest sceneRequest){
         try {

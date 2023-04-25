@@ -51,7 +51,7 @@ public class ReviewController {
     @PutMapping("/post")
     public ResponseEntity<ReviewResponse> updateReview(Principal principal, @RequestBody ReviewRequest reviewRequest){
         try {
-            Review review = productService.createtReview(reviewRequest, principal.getName());
+            Review review = productService.updateReview(reviewRequest, principal.getName());
             return new ResponseEntity<>(ReviewResponse.reviewToReviewResponse(review), HttpStatus.OK);
         } catch (Exception e){
             System.out.println(e);

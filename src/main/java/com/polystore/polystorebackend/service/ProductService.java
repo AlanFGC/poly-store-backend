@@ -99,6 +99,11 @@ public class ProductService {
     }
 
 
+    public List<Product> findAll(){
+        return productRepository.findAll();
+    }
+
+
     // SCENE
 
     public Scene createScene(Scene scene) {
@@ -162,6 +167,33 @@ public class ProductService {
 
         return reviewRepository.save(newReview);
     }
+
+
+    public Review updateReview(ReviewRequest review, String username){
+
+        User user = userService.getUserByName(username);
+        Product product = productRepository.getReferenceById(review.productId);
+        ReviewId reviewId = new ReviewId();
+
+        reviewId.setProductId(product);
+        reviewId.setUsername(user);
+
+
+        if (!reviewRepository.existsById(reviewId)) {
+            throw new EntityExistsException("No review to perform update on");
+        }
+
+        Review existingReview = reviewRepository.getReferenceById(reviewId);
+
+        existingReview.setReview(review.getReview());
+
+        return reviewRepository.save(existingReview);
+    }
+
+
+
+
+
 
     public List<Review> getReviewsByProductId(int productId) {
         return reviewRepository.findByProductId(productId);
