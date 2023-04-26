@@ -12,17 +12,18 @@ public class SceneRequest {
 
     private int productId;
     private String color;
-    private int[] cameraPosition;
+    private int cameraPositionX;
+    private int cameraPositionY;
+    private int cameraPositionZ;
     private short fov;
     private boolean autoRotate;
     private String hdr;
 
     public static Scene sceneRequestToScene(SceneRequest sceneRequest){
-        if (sceneRequest.cameraPosition.length != 3) throw new InvalidParameterException();
         Scene scene = new Scene();
-        scene.setCameraX(sceneRequest.cameraPosition[0]);
-        scene.setCameraY(sceneRequest.cameraPosition[1]);
-        scene.setCameraZ(sceneRequest.cameraPosition[2]);
+        scene.setCameraX(sceneRequest.cameraPositionX);
+        scene.setCameraY(sceneRequest.cameraPositionY);
+        scene.setCameraZ(sceneRequest.cameraPositionZ);
         scene.setFov(sceneRequest.fov);
         scene.setAutoRotate(sceneRequest.autoRotate);
         scene.setColor(sceneRequest.color);
