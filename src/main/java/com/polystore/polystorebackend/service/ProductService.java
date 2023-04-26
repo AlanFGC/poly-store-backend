@@ -3,6 +3,7 @@ package com.polystore.polystorebackend.service;
 import com.polystore.polystorebackend.api.requests.ReviewRequest;
 import com.polystore.polystorebackend.api.requests.ReviewUpdateRequest;
 import com.polystore.polystorebackend.api.requests.SceneRequest;
+import com.polystore.polystorebackend.api.responses.ProductResponse;
 import com.polystore.polystorebackend.model.*;
 import com.polystore.polystorebackend.repository.LikesRepository;
 import com.polystore.polystorebackend.repository.ProductRepository;
@@ -12,6 +13,7 @@ import jakarta.persistence.EntityExistsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.util.Pair;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import java.security.InvalidParameterException;
@@ -276,4 +278,27 @@ public class ProductService {
     }
 
 
+    public ProductResponse safeDelete(String name, int productId) {
+        User user = userService.getUserByName(name);
+        Product product = productRepository.findById(productId).orElseThrow();
+        if ( user.getUsername() == product.getOwner().getUsername() || user.getRole().toString().toUpperCase() != Role.ADMIN.toString()){
+            productRepository.deleteById(productId);
+
+            try {
+                Scene scene = sceneRepository.getSceneByProductId(productId).orElseThrow();
+                deleteSceneById(scene.getSceneId());
+            } catch (Exception e){
+                System.out.println(e + "\n ERROR: failed to delete scene from productId: " + productId);
+            }
+            return ProductResponse.productToProductResponse(product);
+        } else {
+            throw new  AccessDeniedException("USER IS NOT OWNER OR ADMIN");
+        }
+    }
+
+
+    private boolean deleteSceneById(int sceneId){
+        sceneRepository.deleteById(sceneId);
+        return true;
+    }
 }

@@ -106,6 +106,16 @@ public class ProductController {
     }
 
 
+    @DeleteMapping("/delete/{productId}")
+    public ResponseEntity<?> safeDeleteProduct(Principal principal, @PathVariable int productId){
+        try {
+            return new ResponseEntity<>(productService.safeDelete(principal.getName(), productId), HttpStatus.OK);
+        } catch (Exception e){
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+
 
 
 
