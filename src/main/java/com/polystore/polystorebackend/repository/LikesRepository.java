@@ -9,4 +9,6 @@ public interface LikesRepository extends JpaRepository<Likes, LikesId> {
     @Query("update Likes l set l.liked = :state where l.id.userId = :userId AND l.id.productId = :productId")
     void setLikeState(int productId, int userId, boolean state);
 
+    @Query("DELETE FROM Likes l where l.id.productId = :productId")
+    void deleteByProduct(int productId);
 }

@@ -106,10 +106,16 @@ public class ProductController {
     }
 
 
-    @DeleteMapping("/delete/{productId}")
-    public ResponseEntity<?> safeDeleteProduct(Principal principal, @PathVariable int productId){
+
+
+    @Transactional
+
+    @PutMapping("/delete/{productId}")
+    public ResponseEntity<?> safeDeleteProduct(@PathVariable int productId, Principal principal){
+        String username = principal.getName();
+        System.out.println("HITTING DELETE " + username);
         try {
-            return new ResponseEntity<>(productService.safeDelete(principal.getName(), productId), HttpStatus.OK);
+            return new ResponseEntity<>(productService.safeDelete(username, productId), HttpStatus.OK);
         } catch (Exception e){
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
