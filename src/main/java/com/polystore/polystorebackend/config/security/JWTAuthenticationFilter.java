@@ -49,7 +49,6 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
         username = jwtService.extractUsername(jwt);
 
 
-        System.out.println("SYSTEM RUNNING AUTHENTICATION with " + authHeader + " " + username);
 
         // this check if the user is not authenticated yet using th e holder
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null){
