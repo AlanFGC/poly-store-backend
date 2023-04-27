@@ -279,9 +279,17 @@ public class ProductService {
 
 
     public ProductResponse safeDelete(String name, int productId) {
-        System.out.println("TRYING TO DELTE: " + productId + "USING USERNAME: " + name);
+        System.out.println("TRYING TO DELETE: " + productId + " USING USERNAME: " + name);
         User user = userService.getUserByName(name);
-        Product product = productRepository.getReferenceById(productId);
+        Product product = productRepository.findById(productId).orElseThrow();
+
+
+        try {
+            deleteAllLikesWithProductId(productId);
+        } catch (Exception e){
+            System.out.println(e + "\n ERROR: failed to delete Likes from productId: " + productId);
+        }
+
         try {
             Scene scene = sceneRepository.getSceneByProductId(productId).orElseThrow();
             deleteSceneById(scene.getSceneId());
@@ -291,24 +299,18 @@ public class ProductService {
 
 
         try {
-            Scene scene = sceneRepository.getSceneByProductId(productId).orElseThrow();
             deleteAllReviewWithProductId(productId);
         } catch (Exception e){
             System.out.println(e + "\n ERROR: failed to delete review from productId: " + productId);
         }
 
-        try {
-            Scene scene = sceneRepository.getSceneByProductId(productId).orElseThrow();
-            deleteAllLikesWithProductId(productId);
-        } catch (Exception e){
-            System.out.println(e + "\n ERROR: failed to delete Likes from productId: " + productId);
-        }
+
 
         if ( user.getUsername() == product.getOwner().getUsername() || user.getRole().toString().toUpperCase() == Role.ADMIN.toString()){
             productRepository.deleteById(productId);
             return ProductResponse.productToProductResponse(product);
         } else {
-            System.out.println("DELETE COULD NOT BE PERFORMED");
+            //System.out.println("DELETE COULD NOT BE PERFORMED");
             throw new  AccessDeniedException("USER IS NOT OWNER OR ADMIN");
         }
     }
@@ -324,7 +326,7 @@ public class ProductService {
     }
 
     private void deleteAllLikesWithProductId(int productId){
-        likesRepository.deleteByProduct(productId);
+        likesRepository.deleteLikesByProduct(productId);
     }
 
 }
