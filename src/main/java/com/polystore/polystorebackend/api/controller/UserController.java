@@ -33,6 +33,7 @@ public class UserController {
             User user = userService.edit(username, request);
             UserDetailsResponse userDetailsResponse = new UserDetailsResponse();
             userDetailsResponse.setEmail(user.getEmail());
+            userDetailsResponse.setUsername(user.getUsername());
             return new ResponseEntity<>(userDetailsResponse, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
