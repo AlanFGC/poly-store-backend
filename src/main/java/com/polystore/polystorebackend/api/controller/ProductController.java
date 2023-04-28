@@ -109,7 +109,6 @@ public class ProductController {
 
 
     @Transactional
-
     @PutMapping("/delete/{productId}")
     public ResponseEntity<?> safeDeleteProduct(@PathVariable int productId, Principal principal){
         String username = principal.getName();

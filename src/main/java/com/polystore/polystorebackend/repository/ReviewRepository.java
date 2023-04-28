@@ -14,7 +14,4 @@ import java.util.List;
 public interface ReviewRepository extends JpaRepository<Review, ReviewId> {
     @Query(value = "SELECT r from Review r where  r.reviewId.productId.productId = :productId")
     List<Review> findByProductId(@Param("productId") int productId);
-
-    @Query("DELETE FROM Review r where r.reviewId.productId.productId = :productId")
-    void deleteAllByProductId(@Param("productId") int productId);
 }

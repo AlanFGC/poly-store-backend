@@ -172,31 +172,6 @@ public class ProductService {
     }
 
 
-    public Review updateReview(ReviewUpdateRequest review, int productId, String username){
-
-        User user = userService.getUserByName(username);
-        Product product = productRepository.getReferenceById(productId);
-        ReviewId reviewId = new ReviewId();
-
-        reviewId.setProductId(product);
-        reviewId.setUsername(user);
-
-
-        if (!reviewRepository.existsById(reviewId)) {
-            throw new EntityExistsException("No review to perform update on");
-        }
-
-        Review existingReview = reviewRepository.getReferenceById(reviewId);
-
-        existingReview.setReview(review.getReview());
-
-        return reviewRepository.save(existingReview);
-    }
-
-
-
-
-
 
     public List<Review> getReviewsByProductId(int productId) {
         return reviewRepository.findByProductId(productId);
@@ -279,54 +254,30 @@ public class ProductService {
 
 
     public ProductResponse safeDelete(String name, int productId) {
-        System.out.println("TRYING TO DELETE: " + productId + " USING USERNAME: " + name);
         User user = userService.getUserByName(name);
         Product product = productRepository.findById(productId).orElseThrow();
 
+        if (user.getUsername() == product.getOwner().getUsername() || user.getRole().toString().toLowerCase() == Role.ADMIN.toString().toLowerCase()) {
+            List<Likes> likesList = likesRepository.selectLikesBYProductId(productId);
+            List<Review> reviewList = reviewRepository.findByProductId(productId);
 
-        try {
-            deleteAllLikesWithProductId(productId);
-        } catch (Exception e){
-            System.out.println(e + "\n ERROR: failed to delete Likes from productId: " + productId);
-        }
+            for (Review review:
+                    reviewList) {
+                reviewRepository.delete(review);
+            }
 
-        try {
-            Scene scene = sceneRepository.getSceneByProductId(productId).orElseThrow();
-            deleteSceneById(scene.getSceneId());
-        } catch (Exception e){
-            System.out.println(e + "\n ERROR: failed to delete scene from productId: " + productId);
-        }
+            for (Likes like:
+                    likesList) {
+                likesRepository.delete(like);
+            }
 
-
-        try {
-            deleteAllReviewWithProductId(productId);
-        } catch (Exception e){
-            System.out.println(e + "\n ERROR: failed to delete review from productId: " + productId);
-        }
-
-
-
-        if ( user.getUsername() == product.getOwner().getUsername() || user.getRole().toString().toUpperCase() == Role.ADMIN.toString()){
             productRepository.deleteById(productId);
-            return ProductResponse.productToProductResponse(product);
+
         } else {
-            //System.out.println("DELETE COULD NOT BE PERFORMED");
-            throw new  AccessDeniedException("USER IS NOT OWNER OR ADMIN");
+            throw new AccessDeniedException("NOT OWNER OR USER");
         }
-    }
 
-
-    private boolean deleteSceneById(int sceneId){
-        sceneRepository.deleteById(sceneId);
-        return true;
-    }
-
-    private void deleteAllReviewWithProductId(int productId){
-        reviewRepository.deleteAllByProductId(productId);
-    }
-
-    private void deleteAllLikesWithProductId(int productId){
-        likesRepository.deleteLikesByProduct(productId);
+        return ProductResponse.productToProductResponse(product);
     }
 
 }

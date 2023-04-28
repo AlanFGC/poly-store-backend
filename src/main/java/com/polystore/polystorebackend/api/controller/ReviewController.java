@@ -52,7 +52,7 @@ public class ReviewController {
     @PutMapping("/update/{productId}")
     public ResponseEntity<ReviewResponse> updateReview(Principal principal, @PathVariable int productId, @RequestBody ReviewUpdateRequest request) {
         try {
-            Review review = productService.updateReview(request, productId, principal.getName());
+            Review review = productService.updateReview(principal.getName(), productId, request);
             return new ResponseEntity<>(ReviewResponse.reviewToReviewResponse(review), HttpStatus.OK);
         } catch (Exception e) {
             System.out.println(e);

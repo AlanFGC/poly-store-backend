@@ -1,5 +1,6 @@
 package com.polystore.polystorebackend.model;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -18,10 +19,12 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LikesId implements Serializable {
-    @ManyToOne
+
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="product")
     private Product productId;
-    @ManyToOne
+
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="user")
     private User userId;
 }
