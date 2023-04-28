@@ -111,10 +111,11 @@ public class ProductController {
     @Transactional
     @PutMapping("/delete/{productId}")
     public ResponseEntity<?> safeDeleteProduct(@PathVariable int productId, Principal principal){
-        String username = principal.getName();
         try {
+            String username = principal.getName();
             return new ResponseEntity<>(productService.safeDelete(username, productId), HttpStatus.OK);
         } catch (Exception e){
+            System.out.println(e);
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

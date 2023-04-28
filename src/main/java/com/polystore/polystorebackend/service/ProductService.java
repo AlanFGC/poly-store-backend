@@ -20,6 +20,7 @@ import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 
 @Service
@@ -245,7 +246,6 @@ public class ProductService {
     public void deleteReview(String username, int productId){
         User user = userService.getUserByName(username);
         Product product = productRepository.getReferenceById(productId);
-
         ReviewId reviewId = new ReviewId();
         reviewId.setProductId(product);
         reviewId.setUsername(user);
@@ -257,7 +257,7 @@ public class ProductService {
         User user = userService.getUserByName(name);
         Product product = productRepository.findById(productId).orElseThrow();
 
-        if (user.getUsername() == product.getOwner().getUsername() || user.getRole().toString().toLowerCase() == Role.ADMIN.toString().toLowerCase()) {
+        if (Objects.equals(user.getUsername(), product.getOwner().getUsername()) || user.getRole().toString().toLowerCase().equals(Role.ADMIN.toString().toLowerCase())) {
             List<Likes> likesList = likesRepository.selectLikesBYProductId(productId);
             List<Review> reviewList = reviewRepository.findByProductId(productId);
 
@@ -271,7 +271,8 @@ public class ProductService {
                 likesRepository.delete(like);
             }
 
-            productRepository.deleteById(productId);
+            productRepository.delete(product);
+            System.out.println("Java claims deleted worked!");
 
         } else {
             throw new AccessDeniedException("NOT OWNER OR USER");
